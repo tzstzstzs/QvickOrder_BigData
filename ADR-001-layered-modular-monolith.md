@@ -6,7 +6,7 @@ Accepted
 
 ## Dátum
 
-2026-04-14
+2026-04-17
 
 ## Kontextus
 
@@ -15,10 +15,8 @@ Accepted
 - A várható induló méret körülbelül `10 000` felhasználó és `100` étterem.
 - A kiinduló üzleti elvárás gyors piacra lépés, egyszerű megvalósíthatóság és költséghatékony fejlesztés.
 - A fontos nem funkcionális elvárások: gyors válaszidő, kezelhető növekedés, egyszerű telepítés, jó karbantarthatóság, megfelelő rendelkezésre állás, adatintegritás, külső integrációs kompatibilitás.
-- A meglévő modell alapján a rendszer több kliensfelületet szolgál ki: `Web Application` és `Mobile Application`.
+- A rendszer több kliensfelületet szolgál ki: `Web Application` és `Mobile Application`.
 - A külső integrációk a DSL szerint: `External Payment Provider` és `Notification Service`.
-- A jelenlegi architektúramodell egyetlen `Application Backend` konténert mutat, amely belül API, application service, domain, integration adapter és repository elemekre bontott.
-- Ez azt jelzi, hogy a projektben már nem egy elméleti döntésről, hanem egy ténylegesen kiválasztott és modellezett architektúráról van szó.
 
 ## Döntés
 
@@ -26,7 +24,7 @@ Accepted
   - `Layered Architecture`
   - `Modular Monolith`
 - A döntés lényege, hogy a rendszer backendje egyetlen deployolható egységként működik, de azon belül világos rétegek és funkcionális modulok különülnek el.
-- A réteges felosztás a meglévő modellben az alábbi módon jelenik meg:
+- A réteges felosztás az alábbi módon jelenik meg:
   - API réteg: `Catalog API`, `Order API`, `Admin API`
   - alkalmazási réteg: `Cart Application Service`, `Order Application Service`, `Payment Application Service`, `Restaurant Admin Application Service`
   - domain réteg: `Catalog Domain Module`, `Cart Domain Module`, `Order Domain Module`
@@ -45,7 +43,6 @@ Accepted
 - A `deployability` szempontjából egyszerűbb egyetlen backend konténert buildelni, tesztelni és telepíteni, mint több egymástól függő mikroszervizt.
 - Ez különösen fontos olyan projektkörnyezetben, ahol az egyszerűség és a gyors szállítás kiemelt szempont.
 - A `maintainability` szempontjából a réteges szerkezet világos felelősségi határokat ad.
-- A meglévő DSL-ben jól látható, hogy a vezérlők, az alkalmazási szolgáltatások, a domain logika, az integrációs adapterek és a repository réteg elkülönülnek.
 - Ez javítja az átláthatóságot, segíti a tesztelést, és csökkenti annak kockázatát, hogy az üzleti logika szétszóródjon a rendszerben.
 - Az `availability` szempontjából a kisebb operációs komplexitás előnyös.
 - Kevesebb különálló szolgáltatás kevesebb hálózati hibahelyet, egyszerűbb monitorozást és egyszerűbb üzemeltetést jelent.
@@ -85,24 +82,7 @@ Accepted
   - Kiegészítő mintaként később hasznos lehet, de elsődleges architektúraként jelenleg túl összetett lenne.
   - A rendszer alapfolyamatai közvetlen, jól kontrollálható tranzakciós logikát igényelnek, különösen rendelés és fizetés esetén.
 
-## Kapcsolódás a meglévő architektúrához
-
-- A döntés közvetlenül visszatükröződik a meglévő `quickorder-system-context.dsl` fájlban.
-- A modell egyetlen `Application Backend` konténert tartalmaz, amelynek leírása kifejezetten `Modular monolith backend`.
-- A rendszer konténerszinten elkülöníti a `Web Application`, `Mobile Application`, `Application Backend` és `Database` elemeket.
-- Ez azt mutatja, hogy a kliensalkalmazások, az üzleti logika és az adatkezelés világos szerkezeti egységekre vannak bontva.
-- A backend komponensdiagramja réteges felelősségmegosztást mutat:
-  - API komponensek: `Catalog API`, `Order API`, `Admin API`
-  - alkalmazási szolgáltatások: `Cart Application Service`, `Order Application Service`, `Payment Application Service`, `Restaurant Admin Application Service`
-  - domain modulok: `Catalog Domain Module`, `Cart Domain Module`, `Order Domain Module`
-  - integrációs adapterek: `Payment Integration Adapter`, `Notification Integration Adapter`
-  - perzisztencia: `Repository Layer`
-- A kapcsolatok is ezt a döntést támasztják alá: az API-k az alkalmazási vagy domain elemek felé delegálnak, a domain és service komponensek a `Repository Layer` felé mennek, az integrációkat adapterek kezelik.
-- A külső kapcsolatok szintén a választott architektúra mellett szólnak: a backend integrálódik a `External Payment Provider` és a `Notification Service` rendszerekkel, miközben a kliensoldali hozzáférést a webes és mobil konténerek biztosítják.
-- A meglévő README is megerősíti, hogy a projekt a `layered modular monolith approach` szerint lett modellezve.
-
 ## Összegzés
 
 - A QuickOrder jelenlegi érettségi szintjén és várható induló méretén a réteges architektúra és a moduláris monolit együtt adja a legjobb egyensúlyt az egyszerűség, a teljesíthetőség, a karbantarthatóság és a jövőbeli bővíthetőség között.
-- A döntés nemcsak elméletileg indokolt, hanem a meglévő DSL-modellben is egyértelműen megjelenik.
 - A mikroszervizekkel szemben ez a megközelítés jelenleg jobb választás, mert alacsonyabb komplexitás mellett is teljesíti a projekt funkcionális és nem funkcionális elvárásait.
